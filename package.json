@@ -9,6 +9,8 @@
     "cookie": "*",
     "connect": "*",
     "body-parser": "*",
-    "async": "*"
+    "async": "*",
+    "request": "*",
+    "morgan": "*"
   }
 }
