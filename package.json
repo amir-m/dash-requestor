@@ -9,6 +9,7 @@
     "cookie": "*",
     "connect": "*",
     "body-parser": "*",
+    "method-override": "*",
     "async": "*",
     "request": "*",
     "morgan": "*"
