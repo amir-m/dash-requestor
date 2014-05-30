@@ -33,29 +33,29 @@ app.get('/call', function(req, res){
 	});
 });
 
-app.post('/email', function(req, res){
+// app.post('/email', function(req, res){
 
-	res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+// 	res.header('Access-Control-Allow-Origin', '*');
+//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//     res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-    console.log(req.param('email'));
+//     console.log(req.param('email'));
 
-    if (!isEmailAddress(req.param('email'))) return res.send(400);
+//     if (!isEmailAddress(req.param('email'))) return res.send(400);
 	
-	models.Email.findOne(req.body.email, function(error, exist) {
-		if (error) {
-			return res.send(500);
-		}
+// 	models.Email.findOne(req.body.email, function(error, exist) {
+// 		if (error) {
+// 			return res.send(500);
+// 		}
 
-		if (exist.length > 0) {
-			res.send(200);
-		}
-		else {
-			res.send(201);	
-		}
-	});	
-});
+// 		if (exist.length > 0) {
+// 			res.send(200);
+// 		}
+// 		else {
+// 			res.send(201);	
+// 		}
+// 	});	
+// });
 
 // models.Email.findOne('test@example.com', function(error, exist) {
 // 	if (error) {
