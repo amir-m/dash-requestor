@@ -77,3 +77,4 @@ exports.id = _objectId;
 exports.ready = ready;
 exports.Email = Email;
 exports.WaitingListEntry = WaitingListEntry;
+exports.cipher = cipher;
