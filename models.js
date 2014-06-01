@@ -53,7 +53,6 @@ var WaitingListEntrySchema = new mongoose.Schema({
 	uuid: String,
 	email: String,
 	app_launched: { type: Boolean, default: false },
-	app_first_launch_at: Number,
 	added_from: String,
 	confirmed: { type: Boolean, default: false },
 	confirmed_by: String,

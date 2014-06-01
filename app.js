@@ -56,7 +56,7 @@ app.post('/email', function(req, res){
 		
 
 	models.WaitingListEntry.findOne({
-		email: req.param('email')
+		email: models.cipher(req.param('email'))
 	}, function(error, exist) {
 		if (error) {
 			return res.send(500);
@@ -67,16 +67,16 @@ app.post('/email', function(req, res){
 		}
 		else {
 			var wle = new models.WaitingListEntry({
-				email: req.body.email,
+				email: models.cipher(req.param('email')),
 				status: 1,
 				added_from: 'web',
 				created_at: new Date().getTime()
 			});
 			wle.save();
-			models.WaitingListEntry.count({}, function(error, count){
+			models.WaitingListEntry.count({ confirmed: false }, function(error, count){
 				if (error) return res.send(500);
 
-				res.send(200, { count: count + 8139 });
+				res.send(200, { count: count + 3139 });
 			})
 		}
 	});	
