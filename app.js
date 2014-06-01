@@ -4,15 +4,20 @@ var cluster = require('cluster'),
 	express = require("express"),
 	request = require("request"),
 	redis = require("redis"),
-	redisClient = redis.createClient(6379, '54.185.233.146'),
-	models = require("./models").config(redisClient),
+	// redisClient = redis.createClient(6379, '54.185.233.146'), 
+	// redisClient = redis.createClient(6379, 'dbkcache.serzbc.0001.usw2.cache.amazonaws.com'),
+	models = require("./models").config(),
 	app = express(),
     workers = {},
     cpuCount = require('os').cpus().length;
 var forked = false;
 
+models.ready(function(){
+	console.log('Connected');
+});
+
 app.use(require('morgan')('dev'));
-app.set('port', process.env.PORT || 8000);
+app.set('port', process.env.PORT || 8080);
 app.use(require('body-parser')());
 app.use(require('method-override')());
 
@@ -21,41 +26,61 @@ app.get('/call', function(req, res){
 	var uri = req.originalUrl.replace('/call?', '');
 
 	res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Methods', 'GET');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     
     request(uri, function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
-	    
 	    res.send(body);
 	    body = null;
+	  }
+	  else {
+	  	res.send(500);
 	  }
 	});
 });
 
-// app.post('/email', function(req, res){
-
-// 	res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//     res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-//     console.log(req.param('email'));
-
-//     if (!isEmailAddress(req.param('email'))) return res.send(400);
+app.get('/', function(req, res){
 	
-// 	models.Email.findOne(req.body.email, function(error, exist) {
-// 		if (error) {
-// 			return res.send(500);
-// 		}
+	res.send('Hello :)');
+});
 
-// 		if (exist.length > 0) {
-// 			res.send(200);
-// 		}
-// 		else {
-// 			res.send(201);	
-// 		}
-// 	});	
-// });
+app.post('/email', function(req, res){
+
+	res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+	console.log(req.param('email'));
+
+    if (!isEmailAddress(req.param('email'))) return res.send(400);
+		
+
+	models.WaitingListEntry.findOne({
+		email: req.param('email')
+	}, function(error, exist) {
+		if (error) {
+			return res.send(500);
+		}
+
+		if (exist) {
+			res.send(409);
+		}
+		else {
+			var wle = new models.WaitingListEntry({
+				email: req.body.email,
+				status: 1,
+				added_from: 'web',
+				created_at: new Date().getTime()
+			});
+			wle.save();
+			models.WaitingListEntry.count({}, function(error, count){
+				if (error) return res.send(500);
+
+				res.send(200, { count: count + 8139 });
+			})
+		}
+	});	
+});
 
 // models.Email.findOne('test@example.com', function(error, exist) {
 // 	if (error) {
@@ -92,6 +117,8 @@ function spawn(){
 
 
 function isEmailAddress(email) {
+
+	email = email.toLowerCase();
 
 	var pattern = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/; 
     

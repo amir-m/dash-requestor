@@ -49,10 +49,23 @@ function findOneEmail(email, callback) {
 	});
 };
 
+var WaitingListEntrySchema = new mongoose.Schema({
+	uuid: String,
+	email: String,
+	app_launched: { type: Boolean, default: false },
+	app_first_launch_at: Number,
+	added_from: String,
+	confirmed: { type: Boolean, default: false },
+	confirmed_by: String,
+	confirmed_at: Number,
+	created_at: Number
+});
+var WaitingListEntry = mongoose.model('WaitingListEntry', WaitingListEntrySchema);
+
 function ready(callback) {
 	mongoose.connect(connectionString, function(err){
 		if (err) throw err;
-		callback();
+		if (callback) callback();
 	});
 };
 
@@ -64,3 +77,4 @@ exports.config = config;
 exports.id = _objectId;
 exports.ready = ready;
 exports.Email = Email;
+exports.WaitingListEntry = WaitingListEntry;
