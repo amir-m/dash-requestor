@@ -76,7 +76,7 @@ app.post('/email', function(req, res){
 			models.WaitingListEntry.count({ confirmed: false }, function(error, count){
 				if (error) return res.send(500);
 
-				res.send(200, { count: count + 3139 });
+				res.send(200, { count: count + 7520 });
 			})
 		}
 	});	
