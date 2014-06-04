@@ -25,6 +25,8 @@ app.get('/call', function(req, res){
 	
 	var uri = req.originalUrl.replace('/call?', '');
 
+	if (!uri) return res.send(400);
+
 	res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET');
     res.header('Access-Control-Allow-Headers', 'Content-Type');

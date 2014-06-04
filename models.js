@@ -51,15 +51,19 @@ function findOneEmail(email, callback) {
 
 var WaitingListEntrySchema = new mongoose.Schema({
 	uuid: String,
+	uuids: [],
 	email: String,
 	status: String,
 	app_launched: { type: Boolean, default: false },
 	added_from: String,
 	confirmed: { type: Boolean, default: false },
+	uuid_addaded_at: [],
 	confirmed_by: String,
 	confirmed_at: Number,
+	app_launched_at: Number,
 	created_at: Number
 });
+
 var WaitingListEntry = mongoose.model('WaitingListEntry', WaitingListEntrySchema);
 
 function ready(callback) {
