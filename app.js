@@ -83,6 +83,13 @@ app.post('/email', function(req, res){
 	});	
 });
 
+app.get('/:by/confirm', function(req, res){
+	console.log(req.param('by'))
+	console.log(req.param('key'))
+	console.log(req.param('e'))
+	res.send('Hello :)');
+});
+
 // models.Email.findOne('test@example.com', function(error, exist) {
 // 	if (error) {
 // 		console.log(error);
