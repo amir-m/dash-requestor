@@ -84,10 +84,29 @@ app.post('/email', function(req, res){
 });
 
 app.get('/:by/confirm', function(req, res){
-	console.log(req.param('by'))
-	console.log(req.param('key'))
-	console.log(req.param('e'))
-	res.send('Hello :)');
+	var at = new Date().getTime();
+	if (req.param('key').toLowerCase() != 'dbk2014!') return res.send(404);
+	if (req.param('by').toLowerCase() != 'mo' 
+		|| req.param('by').toLowerCase() != 'amir') return res.send(404);
+
+	if (!isEmailAddress(req.param('e'))) return res.send( req.param('e') + ' is not a valid email buddy! R U Drunk?!');
+
+	redisClient.hmset('confirmed:'+req.param('e').toLowerCase(), {
+		confirmed_at: at,
+		confirmed_by: req.param('by').toLowerCase()
+	});
+	res.send(req.param('e') + ' is now confirmed...');
+	models.WaitingListEntry.findOne({ email: req.param('e').toLowerCase() }, function(error, wle){
+		if (error) throw error;
+		if (wle) {
+			wle.confirmed = true;
+			wle.confirmed_by = req.param('by').toLowerCase();
+			wle.confirmed_at = at;
+			wle.status = 3;
+			wle.save();
+			redisClient.hset('user:'+wle.uuid, 'status', 3);
+		}
+	});
 });
 
 // models.Email.findOne('test@example.com', function(error, exist) {
