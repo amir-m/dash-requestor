@@ -5,7 +5,7 @@ var cluster = require('cluster'),
 	request = require("request"),
 	redis = require("redis"),
 	// redisClient = redis.createClient(6379, '54.185.233.146'), 
-	// redisClient = redis.createClient(6379, 'dbkcache.serzbc.0001.usw2.cache.amazonaws.com'),
+	redisClient = redis.createClient(6379, 'dbkcache.serzbc.0001.usw2.cache.amazonaws.com'),
 	models = require("./models").config(),
 	app = express(),
     workers = {},
@@ -43,7 +43,6 @@ app.get('/call', function(req, res){
 });
 
 app.get('/', function(req, res){
-	
 	res.send('Hello :)');
 });
 
@@ -58,7 +57,7 @@ app.post('/email', function(req, res){
 		
 
 	models.WaitingListEntry.findOne({
-		email: models.cipher(req.param('email'))
+		email: req.param('email')
 	}, function(error, exist) {
 		if (error) {
 			return res.send(500);
@@ -69,7 +68,7 @@ app.post('/email', function(req, res){
 		}
 		else {
 			var wle = new models.WaitingListEntry({
-				email: models.cipher(req.param('email')),
+				email: req.param('email'),
 				status: 1,
 				added_from: 'web',
 				created_at: new Date().getTime()
