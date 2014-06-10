@@ -85,14 +85,10 @@ app.post('/email', function(req, res){
 
 app.get('/:by/confirm', function(req, res){
 	var at = new Date().getTime();
-	// if (req.param('key').toLowerCase() != 'dbk2014!') return res.send(404);
+	if (req.param('key').toLowerCase() != 'dbk2014!') return res.send(404);
 	if (req.param('by').toLowerCase() != 'mo' 
-		|| req.param('by').toLowerCase() != 'amir') return res.send(404);
+		&& req.param('by').toLowerCase() != 'amir') return res.send(404);
 
-	console.log(req.param('key'))
-	console.log(req.param('e'))
-	console.log(req.param('by'))
-	
 	if (!isEmailAddress(req.param('e'))) return res.send( req.param('e') + ' is not a valid email buddy! R U Drunk?!');
 
 	redisClient.hmset('confirmed:'+req.param('e').toLowerCase(), {
