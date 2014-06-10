@@ -17,7 +17,7 @@ models.ready(function(){
 });
 
 app.use(require('morgan')('dev'));
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 80);
 app.use(require('body-parser')());
 app.use(require('method-override')());
 
