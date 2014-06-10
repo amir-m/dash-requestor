@@ -84,6 +84,10 @@ app.post('/email', function(req, res){
 });
 
 app.get('/:by/confirm', function(req, res){
+	console.log(req.param('key'))
+	console.log(req.param('e'))
+	console.log(req.param('by'))
+	
 	var at = new Date().getTime();
 	if (req.param('key').toLowerCase() != 'dbk2014!') return res.send(404);
 	if (req.param('by').toLowerCase() != 'mo' 
