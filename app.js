@@ -34,6 +34,8 @@ app.get('/call', function(req, res){
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     
     request(uri, function (error, response, body) {
+
+    	console.log('response received');
 	  if (!error && response.statusCode == 200) {
 	    res.send(body);
 	    body = null;
