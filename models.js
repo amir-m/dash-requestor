@@ -2,7 +2,7 @@ var self = this,
 	mongoose = require('mongoose'),
 	crypto = require('crypto'),
 	redisClient,
-	connectionString = "mongodb://admin:IuT603JamshEqplE2N&0}x!@candidate.19.mongolayer.com:10061/dbk";
+	connectionString = "mongodb://admin:IuT603JamshEqplE2N&0}x!@candidate.32.mongolayer.com:10250/dbk_restore";
 
 
 function _objectId() {
