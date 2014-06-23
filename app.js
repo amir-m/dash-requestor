@@ -99,16 +99,29 @@ app.get('/:by/confirm', function(req, res){
 		confirmed_at: at,
 		confirmed_by: req.param('by').toLowerCase()
 	});
-	res.send(req.param('e') + ' is now confirmed...');
 	models.WaitingListEntry.findOne({ email: req.param('e').toLowerCase() }, function(error, wle){
-		if (error) throw error;
+		if (error) {
+			res.send(error);
+			throw error;
+		};
+		
 		if (wle) {
 			wle.confirmed = true;
 			wle.confirmed_by = req.param('by').toLowerCase();
 			wle.confirmed_at = at;
 			wle.status = 3;
-			wle.save();
+			wle.save(function (error) {
+				if (error) {
+					res.send(error);
+					throw error;
+				};
+
+				res.send(req.param('e') + ' is now confirmed...');
+			});
 			redisClient.hset('user:'+wle.uuid, 'status', 3);
+		}
+		else {
+			res.send(req.param('e') + ' hasnt yet registered ' + req.param('by') + ' !!! ');
 		}
 	});
 });
